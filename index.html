@@ -1,0 +1,1839 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Konoba Pakostanac — tradicionalna dalmatinska konoba u Pakoštanama. Svježa riba, lokalni ribari, recepti naših baka. Od mreže do stola." />
+  <meta name="theme-color" content="#F8F5EE" />
+  <title>Konoba Pakostanac — Od mreže do stola</title>
+
+  <!-- Google Fonts: Cormorant Garamond + Spectral -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Spectral:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet" />
+
+  <!-- GSAP + ScrollTrigger -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+  <!-- Lenis smooth scroll -->
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js" defer></script>
+
+  <style>
+    /* ============================================================
+       DESIGN TOKENS — V2 DAYLIGHT / MARITIME HERITAGE
+    ============================================================ */
+    :root {
+      --bg-base:      #F8F5EE;
+      --bg-warm:      #FDFAF4;
+      --bg-seafoam:   #D9EBE8;
+      --navy:         #1A2E44;
+      --navy-mid:     #243d58;
+      --rope:         #C4A96A;
+      --rope-light:   #DFC898;
+      --ink:          #2A2D30;
+      --stone:        #8C8880;
+      --stone-light:  #C8C4BC;
+
+      --font-display: 'Cormorant Garamond', Georgia, serif;
+      --font-body:    'Spectral', Georgia, serif;
+
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-in-out: cubic-bezier(0.87, 0, 0.13, 1);
+
+      --section-pad: clamp(4rem, 8vw, 8rem);
+      --container: 1280px;
+      --gutter: clamp(1.25rem, 4vw, 2.5rem);
+    }
+
+    /* ============================================================
+       RESET & BASE
+    ============================================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+      scroll-behavior: auto; /* Lenis handles smooth scroll */
+      font-size: 16px;
+    }
+
+    body {
+      background-color: var(--bg-base);
+      color: var(--ink);
+      font-family: var(--font-body);
+      font-weight: 400;
+      line-height: 1.75;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Grain overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='grain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23grain)' opacity='1'/%3E%3C/svg%3E");
+      mix-blend-mode: overlay;
+      opacity: 0.04;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    ::selection {
+      background: var(--rope-light);
+      color: var(--navy);
+    }
+
+    /* ============================================================
+       TYPOGRAPHY SCALE
+    ============================================================ */
+    h1, h2, h3, h4 {
+      font-family: var(--font-display);
+      font-weight: 500;
+      line-height: 1.1;
+      color: var(--navy);
+    }
+
+    h1 { font-size: clamp(2.8rem, 6vw, 5.5rem); letter-spacing: -0.01em; }
+    h2 { font-size: clamp(2rem, 4vw, 3.5rem); letter-spacing: -0.01em; }
+    h3 { font-size: clamp(1.4rem, 2.5vw, 2rem); }
+    h4 { font-size: clamp(1.1rem, 1.8vw, 1.4rem); font-weight: 500; }
+
+    .eyebrow {
+      font-family: var(--font-body);
+      font-size: 0.68rem;
+      font-weight: 400;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--stone);
+    }
+
+    p {
+      font-family: var(--font-body);
+      font-size: clamp(1rem, 1.2vw, 1.1rem);
+      line-height: 1.8;
+      color: var(--ink);
+      font-weight: 300;
+    }
+
+    /* ============================================================
+       LAYOUT UTILITIES
+    ============================================================ */
+    .container {
+      width: 100%;
+      max-width: var(--container);
+      margin-inline: auto;
+      padding-inline: var(--gutter);
+    }
+
+    .section {
+      padding-block: var(--section-pad);
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(18px);
+    }
+
+    /* ============================================================
+       WAVE DIVIDER
+    ============================================================ */
+    .wave-divider {
+      width: 100%;
+      padding-block: 1.5rem;
+      overflow: hidden;
+    }
+
+    .wave-divider svg {
+      width: 100%;
+      height: 30px;
+      display: block;
+    }
+
+    /* ============================================================
+       HEADER
+    ============================================================ */
+    .site-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      transition: background 0.5s var(--ease-out), border-color 0.5s var(--ease-out), padding 0.4s var(--ease-out);
+      padding-block: 1.6rem;
+    }
+
+    .site-header.scrolled {
+      background: var(--bg-warm);
+      border-bottom: 1px solid rgba(26, 46, 68, 0.1);
+      padding-block: 1rem;
+    }
+
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .header-logo {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: clamp(1.1rem, 1.8vw, 1.35rem);
+      font-weight: 500;
+      color: var(--navy);
+      letter-spacing: 0.01em;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .header-nav {
+      display: flex;
+      align-items: center;
+      gap: clamp(1.5rem, 3vw, 3rem);
+    }
+
+    .header-nav a {
+      font-family: var(--font-body);
+      font-size: 0.7rem;
+      font-weight: 400;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--navy);
+      position: relative;
+      padding-bottom: 2px;
+      transition: color 0.3s;
+    }
+
+    .header-nav a::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: var(--rope);
+      transition: width 0.35s var(--ease-out);
+    }
+
+    .header-nav a:hover::after { width: 100%; }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      flex-shrink: 0;
+    }
+
+    .header-phone {
+      font-family: var(--font-body);
+      font-size: 0.78rem;
+      font-weight: 400;
+      letter-spacing: 0.06em;
+      color: var(--navy);
+      transition: color 0.3s;
+    }
+
+    .header-phone:hover { color: var(--rope); }
+
+    .btn-reserve {
+      display: inline-block;
+      font-family: var(--font-body);
+      font-size: 0.68rem;
+      font-weight: 400;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--navy);
+      border: 1px solid var(--navy);
+      padding: 0.55rem 1.1rem;
+      transition: background 0.35s var(--ease-out), color 0.35s var(--ease-out);
+      white-space: nowrap;
+    }
+
+    .btn-reserve:hover {
+      background: var(--navy);
+      color: var(--bg-warm);
+    }
+
+    /* Hamburger */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      width: 28px;
+      height: 28px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      z-index: 200;
+    }
+
+    .hamburger span {
+      display: block;
+      width: 100%;
+      height: 1px;
+      background: var(--navy);
+      transition: transform 0.4s var(--ease-out), opacity 0.3s;
+      transform-origin: center;
+    }
+
+    .hamburger.active span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+    .hamburger.active span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .hamburger.active span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+    /* Mobile menu overlay */
+    .mobile-menu {
+      position: fixed;
+      inset: 0;
+      background: var(--bg-warm);
+      z-index: 150;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s var(--ease-out);
+    }
+
+    .mobile-menu.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .mobile-menu a {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 8vw, 3rem);
+      font-style: italic;
+      color: var(--navy);
+      transition: color 0.3s;
+    }
+
+    .mobile-menu a:hover { color: var(--rope); }
+
+    .mobile-menu-phone {
+      font-family: var(--font-body);
+      font-size: 1rem;
+      letter-spacing: 0.1em;
+      color: var(--stone);
+      margin-top: 1rem;
+    }
+
+    /* ============================================================
+       HERO — SPLIT LAYOUT
+    ============================================================ */
+    .hero {
+      min-height: 100svh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      padding-top: 5rem;
+    }
+
+    /* Left: 2x2 image grid */
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      height: 100%;
+      min-height: 100svh;
+      overflow: hidden;
+    }
+
+    .hero-grid-item {
+      overflow: hidden;
+      position: relative;
+    }
+
+    .hero-grid-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transform: scale(0.95);
+      opacity: 0;
+      transition: none; /* GSAP handles */
+    }
+
+    /* Right: text panel */
+    .hero-text {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: clamp(2.5rem, 6vw, 5rem) clamp(2rem, 5vw, 4.5rem);
+      background: var(--bg-warm);
+      position: relative;
+    }
+
+    .hero-eyebrow {
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-headline {
+      font-size: clamp(3rem, 5.5vw, 6rem);
+      font-style: italic;
+      font-weight: 500;
+      line-height: 1.0;
+      color: var(--navy);
+      margin-bottom: 1.5rem;
+      letter-spacing: -0.02em;
+    }
+
+    .hero-sub {
+      font-size: clamp(1rem, 1.3vw, 1.15rem);
+      line-height: 1.75;
+      color: var(--stone);
+      max-width: 420px;
+      margin-bottom: 2.5rem;
+      font-weight: 300;
+      font-style: italic;
+    }
+
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-family: var(--font-body);
+      font-size: 0.75rem;
+      font-weight: 400;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--bg-warm);
+      background: var(--navy);
+      padding: 1rem 2rem;
+      align-self: flex-start;
+      transition: background 0.35s var(--ease-out), transform 0.35s var(--ease-out);
+      margin-bottom: 2rem;
+    }
+
+    .hero-cta:hover {
+      background: var(--navy-mid);
+      transform: translateX(4px);
+    }
+
+    .hero-cta-arrow {
+      font-size: 1rem;
+      transition: transform 0.3s;
+    }
+
+    .hero-cta:hover .hero-cta-arrow { transform: translateX(4px); }
+
+    .hero-ta {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--font-body);
+      font-size: 0.78rem;
+      color: var(--stone);
+      letter-spacing: 0.04em;
+    }
+
+    .hero-ta-stars { color: var(--rope); }
+
+    /* Decorative rope line */
+    .hero-text::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 1px;
+      height: 100%;
+      background: linear-gradient(to bottom, transparent, rgba(196, 169, 106, 0.35), transparent);
+    }
+
+    /* ============================================================
+       VALUES / TIMELINE — "Od mreže do stola"
+    ============================================================ */
+    .values {
+      background: var(--bg-warm);
+    }
+
+    .values-header {
+      text-align: center;
+      margin-bottom: clamp(3rem, 5vw, 5rem);
+    }
+
+    .values-header h2 { margin-top: 0.75rem; }
+
+    .values-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2px;
+    }
+
+    .value-item {
+      background: var(--bg-base);
+      padding: clamp(2rem, 3.5vw, 3rem) clamp(1.5rem, 2.5vw, 2rem);
+      position: relative;
+      border-top: 2px solid transparent;
+      transition: border-color 0.4s, background 0.4s;
+    }
+
+    .value-item:hover {
+      border-top-color: var(--rope);
+      background: var(--bg-warm);
+    }
+
+    .value-number {
+      font-family: var(--font-display);
+      font-size: 3.5rem;
+      font-weight: 400;
+      color: var(--stone-light);
+      line-height: 1;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+
+    .value-name {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 500;
+      color: var(--navy);
+      margin-bottom: 0.75rem;
+    }
+
+    .value-desc {
+      font-size: 0.9rem;
+      color: var(--stone);
+      line-height: 1.7;
+      font-weight: 300;
+    }
+
+    /* Rope connector line between items */
+    .value-item::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      right: -1px;
+      width: 2px;
+      height: 40%;
+      transform: translateY(-50%);
+      background: linear-gradient(to bottom, transparent, var(--rope-light), transparent);
+    }
+
+    .value-item:last-child::after { display: none; }
+
+    /* ============================================================
+       ABOUT / STORY
+    ============================================================ */
+    .about {
+      background: var(--bg-base);
+    }
+
+    .about-text {
+      max-width: 680px;
+      margin-inline: auto;
+      text-align: center;
+      margin-bottom: clamp(3rem, 5vw, 5rem);
+    }
+
+    .about-text h2 {
+      margin-top: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .about-text p {
+      font-size: clamp(1.05rem, 1.3vw, 1.2rem);
+      line-height: 1.85;
+      color: var(--ink);
+    }
+
+    .about-text p + p { margin-top: 1.25rem; }
+
+    .about-image {
+      width: 100%;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .about-image img {
+      width: 100%;
+      height: clamp(280px, 40vw, 560px);
+      object-fit: cover;
+    }
+
+    .about-image-caption {
+      position: absolute;
+      bottom: 1.5rem;
+      left: 2rem;
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 0.9rem;
+      color: rgba(253, 250, 244, 0.9);
+      letter-spacing: 0.04em;
+    }
+
+    /* ============================================================
+       MENU
+    ============================================================ */
+    .menu {
+      background: var(--bg-warm);
+    }
+
+    .menu-header {
+      margin-bottom: clamp(3rem, 5vw, 5rem);
+    }
+
+    .menu-header h2 { margin-top: 0.75rem; }
+
+    .menu-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+    }
+
+    .menu-category {
+      padding: clamp(2rem, 3vw, 3rem);
+      border: 1px solid rgba(26, 46, 68, 0.08);
+      position: relative;
+      transition: background 0.4s;
+    }
+
+    .menu-category:hover {
+      background: var(--bg-seafoam);
+    }
+
+    .menu-category-icon {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      display: block;
+    }
+
+    .menu-category h3 {
+      font-size: clamp(1.2rem, 2vw, 1.6rem);
+      margin-bottom: 0.75rem;
+      color: var(--navy);
+    }
+
+    .menu-items {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .menu-items li {
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      color: var(--stone);
+      font-weight: 300;
+      padding-left: 1rem;
+      position: relative;
+    }
+
+    .menu-items li::before {
+      content: '—';
+      position: absolute;
+      left: 0;
+      color: var(--rope-light);
+    }
+
+    .menu-note {
+      margin-top: clamp(2rem, 3vw, 3rem);
+      text-align: center;
+      font-style: italic;
+      color: var(--stone);
+      font-size: 0.9rem;
+    }
+
+    /* ============================================================
+       LOCATION
+    ============================================================ */
+    .location {
+      background: var(--bg-base);
+    }
+
+    .location-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(2rem, 4vw, 4rem);
+      align-items: center;
+    }
+
+    .location-images {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+    }
+
+    .location-images img {
+      width: 100%;
+      height: clamp(200px, 25vw, 380px);
+      object-fit: cover;
+    }
+
+    .location-text h2 { margin-top: 0.75rem; margin-bottom: 1.25rem; }
+    .location-text p { color: var(--stone); }
+    .location-text p + p { margin-top: 1rem; }
+
+    .location-badges {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      margin-top: 2rem;
+    }
+
+    .location-badge {
+      font-family: var(--font-body);
+      font-size: 0.7rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--navy);
+      border: 1px solid rgba(26, 46, 68, 0.25);
+      padding: 0.45rem 0.9rem;
+    }
+
+    /* ============================================================
+       GALLERY
+    ============================================================ */
+    .gallery {
+      background: var(--bg-warm);
+    }
+
+    .gallery-header {
+      margin-bottom: clamp(2rem, 4vw, 4rem);
+    }
+
+    .gallery-header h2 { margin-top: 0.75rem; }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
+    }
+
+    .gallery-item {
+      overflow: hidden;
+      position: relative;
+    }
+
+    .gallery-item img {
+      width: 100%;
+      height: clamp(200px, 22vw, 360px);
+      object-fit: cover;
+      transform: scale(0.96);
+      opacity: 0;
+      transition: transform 0.6s var(--ease-out);
+    }
+
+    .gallery-item:hover img {
+      transform: scale(1.04) !important;
+    }
+
+    /* ============================================================
+       RESERVATIONS
+    ============================================================ */
+    .reservations {
+      background: var(--bg-seafoam);
+      text-align: center;
+    }
+
+    .reservations-inner {
+      max-width: 600px;
+      margin-inline: auto;
+    }
+
+    .reservations h2 {
+      margin-top: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .reservations-phone {
+      display: block;
+      font-family: var(--font-display);
+      font-size: clamp(2.2rem, 5vw, 4rem);
+      font-weight: 500;
+      color: var(--navy);
+      margin: 1.5rem 0;
+      letter-spacing: -0.01em;
+      transition: color 0.3s;
+    }
+
+    .reservations-phone:hover { color: var(--rope); }
+
+    .reservations-hours {
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      letter-spacing: 0.1em;
+      color: var(--stone);
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    .reservations-note {
+      font-size: 0.9rem;
+      color: var(--stone);
+      font-style: italic;
+      font-weight: 300;
+    }
+
+    /* ============================================================
+       MAP
+    ============================================================ */
+    .map iframe {
+      display: block;
+      width: 100%;
+      height: clamp(300px, 40vw, 520px);
+      border: none;
+      filter: saturate(0.8) contrast(1.05);
+    }
+
+    /* ============================================================
+       FOOTER
+    ============================================================ */
+    .site-footer {
+      background: var(--bg-warm);
+      border-top: 1px solid rgba(26, 46, 68, 0.1);
+      padding-block: clamp(3rem, 5vw, 5rem);
+    }
+
+    .footer-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 3rem;
+      align-items: start;
+      margin-bottom: 3rem;
+    }
+
+    .footer-brand .footer-logo {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 1.4rem;
+      color: var(--navy);
+      margin-bottom: 0.5rem;
+    }
+
+    .footer-brand p {
+      font-size: 0.85rem;
+      color: var(--stone);
+      font-weight: 300;
+    }
+
+    .footer-contact h4 {
+      font-size: 0.7rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      font-family: var(--font-body);
+      font-weight: 400;
+      color: var(--stone);
+      margin-bottom: 1rem;
+    }
+
+    .footer-contact a, .footer-contact p {
+      font-size: 0.9rem;
+      color: var(--ink);
+      display: block;
+      margin-bottom: 0.4rem;
+      font-weight: 300;
+      transition: color 0.3s;
+    }
+
+    .footer-contact a:hover { color: var(--rope); }
+
+    .footer-social h4 {
+      font-size: 0.7rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      font-family: var(--font-body);
+      font-weight: 400;
+      color: var(--stone);
+      margin-bottom: 1rem;
+    }
+
+    .footer-social-links {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .footer-social-links a {
+      font-family: var(--font-body);
+      font-size: 0.78rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--navy);
+      transition: color 0.3s;
+    }
+
+    .footer-social-links a:hover { color: var(--rope); }
+
+    .footer-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(26, 46, 68, 0.08);
+    }
+
+    .footer-copy {
+      font-size: 0.75rem;
+      color: var(--stone);
+      font-weight: 300;
+    }
+
+    .footer-tagline {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 0.9rem;
+      color: var(--stone);
+    }
+
+    /* ============================================================
+       MOBILE RESERVE BAR
+    ============================================================ */
+    .mobile-reserve-bar {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 90;
+      background: var(--navy);
+      padding: 0;
+    }
+
+    .mobile-reserve-bar a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      padding: 1.1rem 2rem;
+      font-family: var(--font-body);
+      font-size: 0.75rem;
+      font-weight: 400;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--bg-warm);
+      width: 100%;
+    }
+
+    /* ============================================================
+       SPLIT TEXT WORD WRAPPERS
+    ============================================================ */
+    .word-wrap {
+      display: inline-block;
+      overflow: hidden;
+      vertical-align: bottom;
+    }
+
+    .word-inner {
+      display: inline-block;
+    }
+
+    /* ============================================================
+       RESPONSIVE — TABLET 1024px
+    ============================================================ */
+    @media (max-width: 1024px) {
+      .values-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .value-item:nth-child(2)::after { display: none; }
+      .value-item:nth-child(3)::after { display: none; }
+    }
+
+    /* ============================================================
+       RESPONSIVE — MOBILE 768px
+    ============================================================ */
+    @media (max-width: 768px) {
+      /* Header */
+      .header-nav { display: none; }
+      .header-phone { display: none; }
+      .btn-reserve.desktop-only { display: none; }
+      .hamburger { display: flex; }
+
+      /* Hero: stack vertically */
+      .hero {
+        grid-template-columns: 1fr;
+        min-height: auto;
+        padding-top: 4rem;
+      }
+
+      .hero-grid {
+        min-height: 60svh;
+        height: 60svh;
+      }
+
+      .hero-text {
+        padding: 2.5rem 1.5rem;
+      }
+
+      .hero-text::before { display: none; }
+
+      .hero-headline { font-size: clamp(2.5rem, 10vw, 3.5rem); }
+
+      /* Values */
+      .values-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .value-item::after { display: none; }
+
+      /* Menu */
+      .menu-grid {
+        grid-template-columns: 1fr;
+      }
+
+      /* Location */
+      .location-inner {
+        grid-template-columns: 1fr;
+      }
+
+      .location-images {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      /* Gallery */
+      .gallery-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .gallery-grid .gallery-item:last-child {
+        display: none;
+      }
+
+      /* Footer */
+      .footer-inner {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+
+      .footer-bottom {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      /* Mobile reserve bar */
+      .mobile-reserve-bar { display: block; }
+
+      /* Extra bottom padding so bar doesn't overlap content */
+      .site-footer { padding-bottom: 5rem; }
+    }
+
+    @media (max-width: 480px) {
+      .gallery-grid { grid-template-columns: 1fr; }
+      .gallery-grid .gallery-item:last-child { display: block; }
+      .location-images { grid-template-columns: 1fr; }
+    }
+
+    /* ============================================================
+       PREFERS-REDUCED-MOTION
+    ============================================================ */
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { opacity: 1 !important; transform: none !important; }
+      .hero-grid-item img { opacity: 1 !important; transform: scale(1) !important; }
+      .gallery-item img { opacity: 1 !important; transform: scale(1) !important; }
+      * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============================================================
+       MOBILE MENU
+  ============================================================ -->
+  <nav class="mobile-menu" id="mobileMenu" role="dialog" aria-modal="true" aria-label="Navigacija">
+    <a href="#jela" class="mobile-nav-link">Jela</a>
+    <a href="#nasa-prica" class="mobile-nav-link">Naša Priča</a>
+    <a href="#lokacija" class="mobile-nav-link">Lokacija</a>
+    <a href="#galerija" class="mobile-nav-link">Galerija</a>
+    <a href="tel:+38598429868" class="mobile-menu-phone">098 429 868</a>
+  </nav>
+
+  <!-- ============================================================
+       HEADER
+  ============================================================ -->
+  <header class="site-header" id="siteHeader">
+    <div class="container">
+      <div class="header-inner">
+        <a href="#" class="header-logo" aria-label="Konoba Pakostanac — početna">Konoba Pakostanac</a>
+
+        <nav class="header-nav" aria-label="Glavna navigacija">
+          <a href="#jela">Jela</a>
+          <a href="#nasa-prica">Naša Priča</a>
+          <a href="#lokacija">Lokacija</a>
+          <a href="#galerija">Galerija</a>
+        </nav>
+
+        <div class="header-right">
+          <a href="tel:+38598429868" class="header-phone">098 429 868</a>
+          <a href="tel:+38598429868" class="btn-reserve desktop-only">Rezerviraj</a>
+          <button class="hamburger" id="hamburger" aria-label="Otvori izbornik" aria-expanded="false" aria-controls="mobileMenu">
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============================================================
+       HERO — SPLIT: 2x2 GRID + TEXT
+  ============================================================ -->
+  <section class="hero" aria-label="Hero sekcija">
+    <!-- Left: 2x2 editorial image grid -->
+    <div class="hero-grid">
+      <div class="hero-grid-item">
+        <img
+          src="https://loremflickr.com/600/400/fishing,boats,harbor?lock=pk201"
+          alt="Ribarski brodovi u luci Pakoštana"
+          loading="eager"
+          width="600" height="400"
+        />
+      </div>
+      <div class="hero-grid-item">
+        <img
+          src="https://loremflickr.com/600/400/dalmatian,village,morning?lock=pk202"
+          alt="Jutro u dalmatinskom selu"
+          loading="eager"
+          width="600" height="400"
+        />
+      </div>
+      <div class="hero-grid-item">
+        <img
+          src="https://loremflickr.com/600/400/adriatic,sea,daylight?lock=pk203"
+          alt="Jadransko more pri danu"
+          loading="eager"
+          width="600" height="400"
+        />
+      </div>
+      <div class="hero-grid-item">
+        <img
+          src="https://loremflickr.com/600/400/fisherman,nets?lock=pk204"
+          alt="Ribar s mrežama"
+          loading="eager"
+          width="600" height="400"
+        />
+      </div>
+    </div>
+
+    <!-- Right: text panel -->
+    <div class="hero-text">
+      <p class="eyebrow hero-eyebrow">Pakoštane, Dalmacija</p>
+      <h1 class="hero-headline" id="heroHeadline">Od mreže<br>do stola.</h1>
+      <p class="hero-sub">
+        Konoba Pakostanaca — vaša, naša,<br>za sve koji vole Pakoštane.
+      </p>
+      <a href="tel:+38598429868" class="hero-cta">
+        Rezerviraj stol
+        <span class="hero-cta-arrow">→</span>
+      </a>
+      <div class="hero-ta">
+        <span class="hero-ta-stars">★ ★ ★ ★</span>
+        <span>4.2 na TripAdvisoru</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       WAVE DIVIDER 1
+  ============================================================ -->
+  <div class="wave-divider">
+    <svg viewBox="0 0 1200 30" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0 15 Q150 5 300 15 Q450 25 600 15 Q750 5 900 15 Q1050 25 1200 15" stroke="#1A2E44" stroke-width="1" stroke-opacity="0.25" fill="none"/>
+    </svg>
+  </div>
+
+  <!-- ============================================================
+       VALUES / TIMELINE — "Od mreže do stola"
+  ============================================================ -->
+  <section class="section values" aria-labelledby="valuesHeading">
+    <div class="container">
+      <div class="values-header reveal">
+        <p class="eyebrow">Naš put</p>
+        <h2 id="valuesHeading">Od mreže do stola</h2>
+      </div>
+      <div class="values-grid">
+        <div class="value-item reveal">
+          <div class="value-number">01</div>
+          <div class="value-name">Mreža</div>
+          <p class="value-desc">Svako jutro, ribari Pakoštana izvlače mreže iz Jadrana i Vranskog jezera.</p>
+        </div>
+        <div class="value-item reveal">
+          <div class="value-number">02</div>
+          <div class="value-name">Ribari</div>
+          <p class="value-desc">Surađujemo samo s lokalnim ribarima — poznatima po imenu, ne brojevima.</p>
+        </div>
+        <div class="value-item reveal">
+          <div class="value-number">03</div>
+          <div class="value-name">Kuhinja</div>
+          <p class="value-desc">Recepti koje su prenosile naše bake: gradele, peka, buzara.</p>
+        </div>
+        <div class="value-item reveal">
+          <div class="value-number">04</div>
+          <div class="value-name">Vaš stol</div>
+          <p class="value-desc">Svježe, domaće, dalmatinski. Bez kompromisa.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       WAVE DIVIDER 2
+  ============================================================ -->
+  <div class="wave-divider">
+    <svg viewBox="0 0 1200 30" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0 15 Q150 25 300 15 Q450 5 600 15 Q750 25 900 15 Q1050 5 1200 15" stroke="#1A2E44" stroke-width="1" stroke-opacity="0.18" fill="none"/>
+    </svg>
+  </div>
+
+  <!-- ============================================================
+       ABOUT / STORY — "Pakoštane — naš grad"
+  ============================================================ -->
+  <section class="section about" id="nasa-prica" aria-labelledby="aboutHeading">
+    <div class="container">
+      <div class="about-text reveal">
+        <p class="eyebrow">Naša priča</p>
+        <h2 id="aboutHeading">Pakoštane — naš grad</h2>
+        <p>
+          Pakoštane leži između dva mora — Jadrana i Vranskog jezera, jednog od rijetkih
+          slatkovodnih jezera na Mediteranu i zaštićenog parka prirode. Ovdje se suočavaju
+          slana i slatka voda, riba i tišina, modro i zeleno.
+        </p>
+        <p>
+          Konoba Pakostanac nije samo ime — to je titula. Pakostanac je čovjek iz Pakoštana,
+          onaj tko zna ovo mjesto i voli ga. Naša konoba je otvorena s jednim ciljem:
+          poslužiti ono što Pakoštane oduvijek nudi — svježu ribu, domaću hranu i gostoprimstvo
+          kakvo se teško nađe drugdje.
+        </p>
+        <p>
+          Nema zamki za turiste. Nema scenografije. Samo stol, more i okus mjesta
+          koji pamte i naši stari i naša djeca.
+        </p>
+      </div>
+    </div>
+
+    <!-- Full-width image -->
+    <div class="about-image reveal">
+      <img
+        src="https://loremflickr.com/1200/500/dalmatia,coast,village?lock=pk205"
+        alt="Dalmatinska obala i ribarsko selo"
+        loading="lazy"
+        width="1200" height="500"
+      />
+      <span class="about-image-caption">Između Jadrana i Vranskog jezera</span>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       WAVE DIVIDER 3
+  ============================================================ -->
+  <div class="wave-divider">
+    <svg viewBox="0 0 1200 30" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0 15 Q150 5 300 15 Q450 25 600 15 Q750 5 900 15 Q1050 25 1200 15" stroke="#1A2E44" stroke-width="1" stroke-opacity="0.25" fill="none"/>
+    </svg>
+  </div>
+
+  <!-- ============================================================
+       MENU — "Iz mora i s ognjišta"
+  ============================================================ -->
+  <section class="section menu" id="jela" aria-labelledby="menuHeading">
+    <div class="container">
+      <div class="menu-header reveal">
+        <p class="eyebrow">Jelovnik</p>
+        <h2 id="menuHeading">Iz mora i s ognjišta</h2>
+      </div>
+      <div class="menu-grid">
+        <div class="menu-category reveal">
+          <span class="menu-category-icon" aria-hidden="true">🐟</span>
+          <h3>Riba s gradela</h3>
+          <ul class="menu-items">
+            <li>Brancin — svježe iz mreže</li>
+            <li>Orada na gradele</li>
+            <li>Cipol s maslinovim uljem</li>
+            <li>Tuna — dnevni ulov</li>
+          </ul>
+        </div>
+        <div class="menu-category reveal">
+          <span class="menu-category-icon" aria-hidden="true">🔥</span>
+          <h3>Ispod peke</h3>
+          <ul class="menu-items">
+            <li>Janjetina ispod peke</li>
+            <li>Hobotnica — sporo pečena</li>
+            <li>Lignje punjene</li>
+          </ul>
+        </div>
+        <div class="menu-category reveal">
+          <span class="menu-category-icon" aria-hidden="true">🦪</span>
+          <h3>Školjke i buzara</h3>
+          <ul class="menu-items">
+            <li>Dagnje na buzaru</li>
+            <li>Kamenice — sveže, sirovane</li>
+            <li>Lignje na žaru</li>
+            <li>Škampi u buzari</li>
+          </ul>
+        </div>
+        <div class="menu-category reveal">
+          <span class="menu-category-icon" aria-hidden="true">🫒</span>
+          <h3>Domaća kuhinja</h3>
+          <ul class="menu-items">
+            <li>Pašticada s njokima</li>
+            <li>Domaći kruh iz peći</li>
+            <li>Sir i pršut — dalmatinski</li>
+            <li>Maslinovo ulje — domaće</li>
+          </ul>
+        </div>
+      </div>
+      <p class="menu-note reveal">
+        Jela se mijenjaju prema ulovu i sezoni.<br>
+        Pitajte konobare što je danas stiglo s mora.
+      </p>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       LOCATION — "Između Jadrana i Vranskog jezera"
+  ============================================================ -->
+  <section class="section location" id="lokacija" aria-labelledby="locationHeading">
+    <div class="container">
+      <div class="location-inner">
+        <div class="location-images">
+          <img
+            src="https://loremflickr.com/700/500/vransko,lake,nature?lock=pk206"
+            alt="Vransko jezero — park prirode"
+            loading="lazy"
+            width="700" height="500"
+            class="reveal"
+          />
+          <img
+            src="https://loremflickr.com/700/500/adriatic,coast,croatia?lock=pk207"
+            alt="Jadranska obala Hrvatska"
+            loading="lazy"
+            width="700" height="500"
+            class="reveal"
+          />
+        </div>
+        <div class="location-text">
+          <p class="eyebrow reveal">Naša lokacija</p>
+          <h2 id="locationHeading" class="reveal">Između Jadrana i Vranskog jezera</h2>
+          <p class="reveal">
+            Pakoštane je jedno od rijetkih mjesta na Mediteranu gdje se Jadransko more
+            i slatkovodno jezero gledaju na svega nekoliko stotina metara. Vransko jezero,
+            zaštićeni park prirode i ornitološki rezervat, daje našim ribarima sasvim
+            drukčiji ulov od onog morskog.
+          </p>
+          <p class="reveal">
+            Konoba Pakostanac nalazi se u srcu sela, okružena mirisom mora i šumom
+            borova. Svega nekoliko koraka od plaže, na dohvat ruke od svega što
+            Pakoštane čini posebnim mjestom.
+          </p>
+          <div class="location-badges reveal">
+            <span class="location-badge">Pakoštane, Dalmacija</span>
+            <span class="location-badge">Park prirode Vransko jezero</span>
+            <span class="location-badge">Jadranska obala</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       GALLERY
+  ============================================================ -->
+  <section class="section gallery" id="galerija" aria-labelledby="galleryHeading">
+    <div class="container">
+      <div class="gallery-header reveal">
+        <p class="eyebrow">Galerija</p>
+        <h2 id="galleryHeading">Okus i mjesto</h2>
+      </div>
+      <div class="gallery-grid">
+        <div class="gallery-item">
+          <img
+            src="https://loremflickr.com/600/450/grilled,fish,adriatic?lock=pk208"
+            alt="Riba s gradela"
+            loading="lazy"
+            width="600" height="450"
+          />
+        </div>
+        <div class="gallery-item">
+          <img
+            src="https://loremflickr.com/600/450/fishing,village,croatia?lock=pk209"
+            alt="Ribarsko selo Hrvatska"
+            loading="lazy"
+            width="600" height="450"
+          />
+        </div>
+        <div class="gallery-item">
+          <img
+            src="https://loremflickr.com/600/450/dalmatian,konoba,table?lock=pk210"
+            alt="Dalmatinska konoba — stol"
+            loading="lazy"
+            width="600" height="450"
+          />
+        </div>
+        <div class="gallery-item">
+          <img
+            src="https://loremflickr.com/600/450/seafood,fresh?lock=pk211"
+            alt="Svježe plodove mora"
+            loading="lazy"
+            width="600" height="450"
+          />
+        </div>
+        <div class="gallery-item">
+          <img
+            src="https://loremflickr.com/600/450/pakostane,harbor?lock=pk212"
+            alt="Pakoštane — luka"
+            loading="lazy"
+            width="600" height="450"
+          />
+        </div>
+        <div class="gallery-item">
+          <img
+            src="https://loremflickr.com/600/450/adriatic,fishing,morning?lock=pk213"
+            alt="Jutarnji ribolov na Jadranu"
+            loading="lazy"
+            width="600" height="450"
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       RESERVATIONS
+  ============================================================ -->
+  <section class="section reservations" aria-labelledby="reservationsHeading">
+    <div class="container">
+      <div class="reservations-inner">
+        <p class="eyebrow reveal">Rezervacije</p>
+        <h2 id="reservationsHeading" class="reveal">Rezervirajte stol</h2>
+        <p class="reveal" style="color:var(--stone); font-size:1rem; margin-bottom:0.5rem;">
+          Pozovite nas i rezervirajte — voljeli bismo vas dočekati.
+        </p>
+        <a href="tel:+38598429868" class="reservations-phone reveal">098 429 868</a>
+        <p class="reservations-hours reveal">Pon – Ned &nbsp;·&nbsp; 12:00 – 23:00</p>
+        <p class="reservations-note reveal">
+          Za grupe od 8 i više osoba, molimo nazovite dan ranije.<br>
+          Terase su dostupne po lijepom vremenu.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       MAP
+  ============================================================ -->
+  <div class="map" aria-label="Karta lokacije">
+    <iframe
+      src="https://maps.google.com/maps?q=Konoba+Pakostanac+Pakostane&output=embed&z=15"
+      title="Konoba Pakostanac na Google kartama"
+      allowfullscreen
+      loading="lazy"
+      referrerpolicy="no-referrer-when-downgrade"
+    ></iframe>
+  </div>
+
+  <!-- ============================================================
+       FOOTER
+  ============================================================ -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <div class="footer-logo">Konoba Pakostanac</div>
+          <p>Pakoštane, Dalmacija</p>
+          <p style="margin-top:0.75rem; font-style:italic; font-size:0.85rem;">
+            "Naša konoba. Naše more. Naši ljudi."
+          </p>
+        </div>
+        <div class="footer-contact">
+          <h4>Kontakt</h4>
+          <a href="tel:+38598429868">+385 98 429 868</a>
+          <p>Pakoštane, 23211 Dalmacija</p>
+          <p style="margin-top:0.75rem;">
+            Pored Vranskog jezera<br>i Jadranskog mora
+          </p>
+        </div>
+        <div class="footer-social">
+          <h4>Pratite nas</h4>
+          <div class="footer-social-links">
+            <a href="#" aria-label="Facebook stranica">Facebook</a>
+            <a href="#" aria-label="Instagram profil">Instagram</a>
+          </div>
+          <p style="margin-top:1.5rem; font-size:0.8rem; color:var(--stone);">
+            Pon – Ned · 12:00 – 23:00
+          </p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p class="footer-copy">&copy; 2024 Konoba Pakostanac. Sva prava pridržana.</p>
+        <p class="footer-tagline">Od mreže do stola.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ============================================================
+       MOBILE RESERVE BAR
+  ============================================================ -->
+  <div class="mobile-reserve-bar" aria-label="Brza rezervacija">
+    <a href="tel:+38598429868">
+      <span>Rezerviraj stol</span>
+      <span>→</span>
+    </a>
+  </div>
+
+  <!-- ============================================================
+       JAVASCRIPT
+  ============================================================ -->
+  <script>
+    // ----------------------------------------------------------------
+    // Wait for all deferred scripts to load
+    // ----------------------------------------------------------------
+    function waitForLibs(callback) {
+      const check = () => {
+        if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined' && typeof Lenis !== 'undefined') {
+          callback();
+        } else {
+          requestAnimationFrame(check);
+        }
+      };
+      requestAnimationFrame(check);
+    }
+
+    // ----------------------------------------------------------------
+    // Hamburger / Mobile Menu
+    // ----------------------------------------------------------------
+    (function initMobileMenu() {
+      const hamburger = document.getElementById('hamburger');
+      const mobileMenu = document.getElementById('mobileMenu');
+      const mobileLinks = mobileMenu.querySelectorAll('a');
+      let isOpen = false;
+
+      function openMenu() {
+        isOpen = true;
+        mobileMenu.classList.add('active');
+        hamburger.classList.add('active');
+        hamburger.setAttribute('aria-expanded', 'true');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeMenu() {
+        isOpen = false;
+        mobileMenu.classList.remove('active');
+        hamburger.classList.remove('active');
+        hamburger.setAttribute('aria-expanded', 'false');
+        document.body.style.overflow = '';
+      }
+
+      hamburger.addEventListener('click', () => {
+        isOpen ? closeMenu() : openMenu();
+      });
+
+      mobileLinks.forEach(link => {
+        link.addEventListener('click', closeMenu);
+      });
+
+      document.addEventListener('keydown', e => {
+        if (e.key === 'Escape' && isOpen) closeMenu();
+      });
+    })();
+
+    // ----------------------------------------------------------------
+    // Sticky Header
+    // ----------------------------------------------------------------
+    (function initStickyHeader() {
+      const header = document.getElementById('siteHeader');
+      let ticking = false;
+
+      function onScroll() {
+        if (!ticking) {
+          requestAnimationFrame(() => {
+            if (window.scrollY > 60) {
+              header.classList.add('scrolled');
+            } else {
+              header.classList.remove('scrolled');
+            }
+            ticking = false;
+          });
+          ticking = true;
+        }
+      }
+
+      window.addEventListener('scroll', onScroll, { passive: true });
+    })();
+
+    // ----------------------------------------------------------------
+    // Smooth anchor scroll (native, Lenis will handle it)
+    // ----------------------------------------------------------------
+    document.querySelectorAll('a[href^="#"]').forEach(link => {
+      link.addEventListener('click', e => {
+        const target = document.querySelector(link.getAttribute('href'));
+        if (target) {
+          e.preventDefault();
+          target.scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+    });
+
+    // ----------------------------------------------------------------
+    // MAIN GSAP + LENIS INIT
+    // ----------------------------------------------------------------
+    waitForLibs(function () {
+      // Respect reduced motion
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      if (reducedMotion) {
+        // Show everything immediately
+        document.querySelectorAll('.reveal').forEach(el => {
+          el.style.opacity = '1';
+          el.style.transform = 'none';
+        });
+        document.querySelectorAll('.hero-grid-item img, .gallery-item img').forEach(img => {
+          img.style.opacity = '1';
+          img.style.transform = 'scale(1)';
+        });
+        return;
+      }
+
+      // ── GSAP + ScrollTrigger ──
+      gsap.registerPlugin(ScrollTrigger);
+
+      // ── Lenis smooth scroll ──
+      const lenis = new Lenis({
+        duration: 1.3,
+        easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        orientation: 'vertical',
+        smoothWheel: true,
+        lerp: 0.085,
+      });
+
+      // Sync Lenis with GSAP ticker
+      gsap.ticker.add(time => lenis.raf(time * 1000));
+      gsap.ticker.lagSmoothing(0);
+      lenis.on('scroll', ScrollTrigger.update);
+
+      // Close mobile menu smooth scroll via lenis
+      document.querySelectorAll('a[href^="#"]').forEach(link => {
+        link.addEventListener('click', e => {
+          const target = document.querySelector(link.getAttribute('href'));
+          if (target) {
+            e.preventDefault();
+            lenis.scrollTo(target, { offset: -80, duration: 1.4 });
+          }
+        });
+      });
+
+      // ── Helper: split text into word spans ──
+      function splitIntoWords(el) {
+        const text = el.textContent;
+        const words = text.split(/(\s+)/);
+        el.innerHTML = '';
+        words.forEach(part => {
+          if (part.trim() === '') {
+            el.appendChild(document.createTextNode(part));
+            return;
+          }
+          const wrap = document.createElement('span');
+          wrap.className = 'word-wrap';
+          wrap.style.overflow = 'hidden';
+          wrap.style.display = 'inline-block';
+          wrap.style.verticalAlign = 'bottom';
+          const inner = document.createElement('span');
+          inner.className = 'word-inner';
+          inner.style.display = 'inline-block';
+          inner.textContent = part;
+          wrap.appendChild(inner);
+          el.appendChild(wrap);
+        });
+        return el.querySelectorAll('.word-inner');
+      }
+
+      // ── Hero text: word-split reveal on load ──
+      const heroHeadline = document.getElementById('heroHeadline');
+      const heroEyebrow = document.querySelector('.hero-eyebrow');
+      const heroSub = document.querySelector('.hero-sub');
+      const heroCta = document.querySelector('.hero-cta');
+      const heroTa = document.querySelector('.hero-ta');
+
+      const headlineWords = splitIntoWords(heroHeadline);
+
+      const heroTl = gsap.timeline({ delay: 0.4 });
+      heroTl
+        .from(heroEyebrow, {
+          opacity: 0,
+          y: 12,
+          duration: 0.8,
+          ease: 'power3.out',
+        })
+        .from(headlineWords, {
+          y: '110%',
+          opacity: 0,
+          duration: 0.9,
+          stagger: 0.1,
+          ease: 'power3.out',
+        }, '-=0.4')
+        .from([heroSub, heroCta, heroTa], {
+          opacity: 0,
+          y: 14,
+          duration: 0.9,
+          stagger: 0.12,
+          ease: 'power3.out',
+        }, '-=0.5');
+
+      // ── Hero images: stagger scale-in ──
+      const heroImages = document.querySelectorAll('.hero-grid-item img');
+      gsap.to(heroImages, {
+        scale: 1,
+        opacity: 1,
+        duration: 1.1,
+        stagger: 0.15,
+        ease: 'power3.out',
+        delay: 0.3,
+      });
+
+      // ── Section H2 word-split reveals on scroll ──
+      document.querySelectorAll('h2').forEach(h2 => {
+        // Skip hero headline (already animated)
+        if (h2.id === 'heroHeadline') return;
+
+        const words = splitIntoWords(h2);
+        gsap.from(words, {
+          y: '100%',
+          opacity: 0,
+          duration: 0.85,
+          stagger: 0.08,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: h2,
+            start: 'top 88%',
+            once: true,
+          },
+        });
+      });
+
+      // ── All .reveal elements: fade + translateY ──
+      document.querySelectorAll('.reveal').forEach((el, i) => {
+        // Values grid: stagger each item
+        const isValueItem = el.classList.contains('value-item');
+        const parent = el.parentElement;
+        const siblings = parent ? parent.querySelectorAll('.value-item') : [];
+        let staggerIndex = 0;
+        if (isValueItem) {
+          siblings.forEach((s, idx) => { if (s === el) staggerIndex = idx; });
+        }
+
+        gsap.fromTo(el,
+          { opacity: 0, y: 18 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 1.0,
+            ease: 'power3.out',
+            delay: isValueItem ? staggerIndex * 0.12 : 0,
+            scrollTrigger: {
+              trigger: el,
+              start: 'top 88%',
+              once: true,
+            },
+          }
+        );
+      });
+
+      // ── Gallery images: scale-in reveal ──
+      document.querySelectorAll('.gallery-item img').forEach((img, i) => {
+        gsap.fromTo(img,
+          { scale: 0.96, opacity: 0 },
+          {
+            scale: 1,
+            opacity: 1,
+            duration: 1.0,
+            ease: 'power3.out',
+            delay: (i % 3) * 0.1,
+            scrollTrigger: {
+              trigger: img,
+              start: 'top 90%',
+              once: true,
+            },
+          }
+        );
+      });
+
+      // ── Location images reveal ──
+      document.querySelectorAll('.location-images img').forEach((img, i) => {
+        gsap.fromTo(img,
+          { opacity: 0, y: 20 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 1.0,
+            ease: 'power3.out',
+            delay: i * 0.15,
+            scrollTrigger: {
+              trigger: img,
+              start: 'top 88%',
+              once: true,
+            },
+          }
+        );
+      });
+
+      // ── About full-width image reveal ──
+      const aboutImg = document.querySelector('.about-image img');
+      if (aboutImg) {
+        gsap.fromTo(aboutImg,
+          { clipPath: 'inset(100% 0 0 0)' },
+          {
+            clipPath: 'inset(0% 0 0 0)',
+            duration: 1.4,
+            ease: 'power3.inOut',
+            scrollTrigger: {
+              trigger: aboutImg,
+              start: 'top 85%',
+              once: true,
+            },
+          }
+        );
+      }
+
+      // ── Wave dividers subtle fade-in ──
+      document.querySelectorAll('.wave-divider').forEach(div => {
+        gsap.fromTo(div,
+          { opacity: 0, scaleX: 0.92 },
+          {
+            opacity: 1,
+            scaleX: 1,
+            duration: 1.2,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: div,
+              start: 'top 92%',
+              once: true,
+            },
+          }
+        );
+      });
+
+      // ── Reservations phone number — draw-in ──
+      const resPhone = document.querySelector('.reservations-phone');
+      if (resPhone) {
+        gsap.fromTo(resPhone,
+          { opacity: 0, scale: 0.94 },
+          {
+            opacity: 1,
+            scale: 1,
+            duration: 1.0,
+            ease: 'back.out(1.4)',
+            scrollTrigger: {
+              trigger: resPhone,
+              start: 'top 88%',
+              once: true,
+            },
+          }
+        );
+      }
+
+    }); // end waitForLibs
+  </script>
+</body>
+</html>
